@@ -5,11 +5,10 @@
 
 > [!IMPORTANT]
 > **How to install:**
-> 1. Download the actual release
-> 2. Rename the file to autoclick.jar
-> 3. Open a terminal wherever you have the file (You can double click to open it too)
-> 4. Type `java -jar autoclick.jar`
-> 5. Enjoy the autoclick!
+> **1.** Download the actual release
+> **2.** Open a terminal wherever you have the file (You can double click to open it too)
+> **3.** Type `java -jar autoclick.jar`
+> **4.** Enjoy the autoclick!
 
 ## Screenshots:
 
