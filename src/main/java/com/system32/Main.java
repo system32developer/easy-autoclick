@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,11 +20,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.converter.IntegerStringConverter;
+
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 import java.util.prefs.Preferences;
-
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -41,7 +43,6 @@ public class Main extends Application implements NativeKeyListener {
         primaryStage.setTitle("EasyAutoclick");
         Image icon = new Image(getClass().getResourceAsStream("/icon.png"));
         primaryStage.getIcons().add(icon);
-        
 
         VBox vbox = new VBox();
 
@@ -88,6 +89,16 @@ public class Main extends Application implements NativeKeyListener {
 
         Label timeLabel = new Label("Time (ms):");
         Spinner<Integer> timeSpinner = new Spinner<>(1, Integer.MAX_VALUE, 50);
+        TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter(), 50, change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d*")) {
+                return change;
+            }
+            return null;
+        });
+        timeSpinner.getEditor().setTextFormatter(formatter);
+        timeSpinner.setEditable(true);
+        timeSpinner.setStyle("-fx-caret-color: transparent;");
 
         ToggleButton toggleButton = new ToggleButton("Left Click");
         toggleButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -105,10 +116,24 @@ public class Main extends Application implements NativeKeyListener {
         Robot robot = new Robot();
 
         Platform.runLater(() -> vbox.requestFocus());
-
+        timeSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            timeline.stop();
+            timeline.getKeyFrames().clear();
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(newValue), e -> {
+                System.out.println(newValue);
+                if ((toggleButton.isSelected() ? "R" : "L").equals("R")) {
+                    robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);
+                    robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);
+                } else {
+                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                    robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+                }
+            }));
+            timeline.play();
+        });
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
-
+        
         keyField.addEventHandler(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {
             keyField.setText(event.getCharacter().toUpperCase());
             keyText = event.getCharacter();
@@ -136,6 +161,10 @@ public class Main extends Application implements NativeKeyListener {
         primaryStage.setScene(new Scene(vbox, 300, 250));
         primaryStage.show();
         primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
     }
 
     @Override
@@ -159,6 +188,6 @@ public class Main extends Application implements NativeKeyListener {
 
     public static void main(String[] args) {
         launch(args);
-        //new Stats(prefs);
+        // new Stats(prefs);
     }
 }
