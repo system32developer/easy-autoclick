@@ -4,11 +4,12 @@
 > You need java installed on your device!
 
 > [!IMPORTANT]
-> **How to install:**
-> **1.** Download the actual release
-> **2.** Open a terminal wherever you have the file (You can double click to open it too)
-> **3.** Type `java -jar autoclick.jar`
-> **4.** Enjoy the autoclick!
+> > **How to install:**<br />
+>
+> **1.** Download the actual release<br />
+> **2.** Open a terminal wherever you have the file (You can double click to open it too)<br />
+> **3.** Type `java -jar autoclick.jar`<br />
+> **4.** Enjoy the autoclick!<br />
 
 ## Screenshots:
 
