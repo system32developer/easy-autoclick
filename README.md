@@ -1,5 +1,8 @@
 # Easy Autoclick
 
+> [!WARNING]
+> For now is not working on windows, i'm finding the reason
+
 > [!CAUTION]
 > You need java installed on your device!
 
