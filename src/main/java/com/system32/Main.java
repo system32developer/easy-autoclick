@@ -120,7 +120,7 @@ public class Main extends Application implements NativeKeyListener {
             timeline.stop();
             timeline.getKeyFrames().clear();
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(newValue), e -> {
-                System.out.println(newValue);
+
                 if ((toggleButton.isSelected() ? "R" : "L").equals("R")) {
                     robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);
                     robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);
@@ -170,13 +170,16 @@ public class Main extends Application implements NativeKeyListener {
     @Override
     public void nativeKeyPressed(NativeKeyEvent e) {
         if (keyText != null && NativeKeyEvent.getKeyText(e.getKeyCode()).toLowerCase().equals(keyText.toLowerCase())) {
-            if (timeline.getStatus() == Animation.Status.RUNNING) {
-                timeline.stop();
-            } else {
-                timeline.play();
-            }
+            Platform.runLater(() -> {
+                if (timeline.getStatus() == Animation.Status.RUNNING) {
+                    timeline.stop();
+                } else {
+                    timeline.play();
+                }
+            });
         }
     }
+
 
     @Override
     public void nativeKeyReleased(NativeKeyEvent e) {
